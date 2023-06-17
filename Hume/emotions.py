@@ -1,10 +1,12 @@
+from utilities import print_emotions
+
 from hume import HumeBatchClient
-from hume.models.config import FaceConfig
+from hume.models.config import ProsodyConfig
 from pprint import pprint
 
 client = HumeBatchClient("ZH01lHke6S8yBjZAAr05j3elbMkM6UwPJlGH2cH0HzBaOeoa")
-urls = ["https://iep.utm.edu/wp-content/media/hume-bust.jpg"]
-config = FaceConfig()
+urls = ["assets/test.mp3"]
+config = ProsodyConfig()
 job = client.submit_job(urls, [config])
 
 print(job)
@@ -14,17 +16,14 @@ job.await_complete()
 predictions = job.get_predictions()
 print(predictions)
 
-details = job.get_details()
-run_time_ms = details.get_run_time_ms()
-print(f"Job ran for {run_time_ms} milliseconds")
-
-'''status = job.get_status()
-print(f"Job status: {status}")
-
-details = job.get_details()
-run_time_ms = details.get_run_time_ms()
-print(f"Job ran for {run_time_ms} milliseconds")
-
-#predictions = job.get_predictions()
-#pprint(predictions)
-'''
+full_predictions = job.get_predictions()
+for source in full_predictions:
+    source_name = source["source"]["url"]
+    predictions = source["results"]["predictions"]
+    for prediction in predictions:
+        print()
+        print("Speech prosody")
+        prosody_predictions = prediction["models"]["prosody"]["grouped_predictions"]
+        for prosody_prediction in prosody_predictions:
+            for segment in prosody_prediction["predictions"][:1]:
+                print_emotions(segment["emotions"])
