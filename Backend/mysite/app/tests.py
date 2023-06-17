@@ -8,10 +8,11 @@ api_key = os.getenv("OPENAI_KEY", None)
 class testing(TestCase):
     def test1(self):
         chatbot_response = None
+        print(api_key)
         if api_key is not None:
             openai.api_key = api_key
             userInput = ""
-            prompt = ""
+            prompt = "What is an apple?"
 
             res = openai.Completion.create(
                 engine = "text-davinci-003",
