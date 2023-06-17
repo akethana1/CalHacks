@@ -1,2 +1,2 @@
 # CalHacks
-Sanjit Rao's winning project
+Follow @SanjitRao49
