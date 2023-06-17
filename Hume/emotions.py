@@ -1,11 +1,11 @@
-from utilities import print_emotions
+#from utilities import print_emotions
 
 from hume import HumeBatchClient
 from hume.models.config import ProsodyConfig
 from pprint import pprint
 
 client = HumeBatchClient("ZH01lHke6S8yBjZAAr05j3elbMkM6UwPJlGH2cH0HzBaOeoa")
-urls = ["assets/test.mp3"]
+urls = ["https://storage.googleapis.com/hume-test-data/audio/ninth-century-laugh.mp3"]
 config = ProsodyConfig()
 job = client.submit_job(urls, [config])
 
@@ -26,4 +26,5 @@ for source in full_predictions:
         prosody_predictions = prediction["models"]["prosody"]["grouped_predictions"]
         for prosody_prediction in prosody_predictions:
             for segment in prosody_prediction["predictions"][:1]:
-                print_emotions(segment["emotions"])
+                print(segment["emotions"])
+                print ("\n")
