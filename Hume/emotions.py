@@ -2,6 +2,7 @@ from hume import HumeBatchClient
 from hume.models.config import LanguageConfig
 from itertools import islice
 import requests
+import time
 
 def get_job_id():
     url = "https://api.hume.ai/v0/batch/jobs"
@@ -26,11 +27,16 @@ def get_predictions():
         "accept": "application/json; charset=utf-8",
         "X-Hume-Api-Key": "yuETNz2lWdHFHtKNzdeVNsAhBOQCCzAHFsjeAKQkYOtlFqcS"
     }
-
-    response = requests.get(url, headers=headers)
+    while True:
+        response = requests.get(url, headers=headers)
+        data = response.json()
+        if 'status' in data and data['status'] == 400:
+            time.sleep(1)  # Pause for 1 second before making the next request
+            continue
+        break
     full_predictions = response.json()
-    print(job_id)
-    print(full_predictions)
+    #print(job_id)
+    #print(full_predictions)
 
     for source in full_predictions:
         predictions = source["results"]["predictions"]
@@ -44,7 +50,7 @@ def get_predictions():
                     final_emotions = list(top_emotions.keys())
                     return final_emotions
                     
-print(get_predictions())
+#print(get_predictions())
 
 
             
