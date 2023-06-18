@@ -2,13 +2,14 @@ import logo from './logo.svg'
 import './App.css'
 import React, { useState } from 'react'
 import axios from 'axios'
-import { AudioRecorder } from 'react-audio-voice-recorder';
 import { useReactMediaRecorder  } from "react-media-recorder";
-function App() {
+import { AudioRecorder } from 'react-audio-voice-recorder';
+
+function Temp() {
 
   const [text, setText] = useState("")
   const [responseFromAI, setResponseFromAI] = useState("")
-  const [recordedAudio, setRecordedAudio] = useState(null);
+  const [theAudio, setTheAudio] = useState(null)
   const {
     status,
     startRecording,
@@ -38,6 +39,34 @@ function App() {
         setResponseFromAI(res.data.choices[0]["text"])
       })
   }
+
+
+  const handeSubmitAudio = () => {
+    
+  }
+
+  const convertBlobToBase64 = (blob, callback) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(blob);
+    reader.onloadend = () => {
+      const base64String = reader.result.split(',')[1];
+      callback(base64String);
+    };
+  }
+
+  const addAudioElement = (blob) => {
+    setTheAudio(blob)
+    convertBlobToBase64(blob, (base64String) => {
+      console.log(base64String);
+    });
+
+    const url = URL.createObjectURL(blob)
+    console.log(url)
+    // const audio = document.createElement("audio");
+    // audio.src = url
+    // audio.controls = true
+    // document.body.appendChild(audio);
+  }
   return (
     <div className="App">
       <h1>Learn English</h1>
@@ -47,23 +76,22 @@ function App() {
         onChange={event => setText(event.target.value)}
       />
       <button onClick={handleSubmit}>Submit</button>
+      <button onClick={handeSubmitAudio}>Submit Audio</button>
       <div>
         {responseFromAI}
       </div>
 
-      <div>
-      <button onClick={startRecording} disabled={status === 'recording'}>
-        Start Recording
-      </button>
-      <button onClick={handleStopRecording} disabled={status !== 'recording'}>
-        Stop Recording
-      </button>
-      {mediaBlobUrl && (
-        <audio src={mediaBlobUrl} controls autoPlay />
-      )}
-    </div>
+      <AudioRecorder 
+      onRecordingComplete={addAudioElement}
+      audioTrackConstraints={{
+        noiseSuppression: true,
+        echoCancellation: true,
+      }} 
+      downloadOnSavePress={false}
+      downloadFileExtension="mp3"
+    />
     </div>
   );
 }
 
-export default App;
+export default Temp;
