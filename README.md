@@ -1,4 +1,7 @@
-# EnglishAI
+# EnglishAI 
+
+# Repo Information
+The latest update is in the branch titled 'latestOne'.
 
 # Inspiration
 For foreigners visiting English-speaking countries, spoken English is by far the most common yet most challenging aspect of language learning. However, many non-native English speakers struggle to find real-life practice of spoken English due to factors including cost, location, and most importantly, a lack of fluent speakers to engage in conversations with. However, many popular language learning apps such as Duolingo lack this crucial feature. Having a real-time English teacher in a conversational format will help people learn and practice one of the most widely used languages in the world.
