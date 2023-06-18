@@ -5,6 +5,63 @@ from dotenv import load_dotenv
 from django.http import JsonResponse
 from django.conf import settings
 import uuid
+
+from hume import HumeBatchClient
+from hume.models.config import LanguageConfig
+from itertools import islice
+import requests
+import time
+
+
+
+
+
+def get_predictions(fPath):
+    
+    def get_job_id():
+      url = "https://api.hume.ai/v0/batch/jobs"
+
+      files = {"file": ("test.mp3", open(fPath, "rb"), "audio/mpeg")}
+      payload = {"json": "{}"}
+      headers = {
+          "accept": "application/json",
+          "X-Hume-Api-Key": "yuETNz2lWdHFHtKNzdeVNsAhBOQCCzAHFsjeAKQkYOtlFqcS"
+      }
+
+      response = requests.post(url, data=payload, files=files, headers=headers)
+
+      return response.json()["job_id"]
+    
+    job_id = get_job_id()
+    url = "https://api.hume.ai/v0/batch/jobs/" + job_id + "/predictions"
+
+    headers = {
+        "accept": "application/json; charset=utf-8",
+        "X-Hume-Api-Key": "yuETNz2lWdHFHtKNzdeVNsAhBOQCCzAHFsjeAKQkYOtlFqcS"
+    }
+    while True:
+        response = requests.get(url, headers=headers)
+        data = response.json()
+        if 'status' in data and data['status'] == 400:
+            time.sleep(1)  # Pause for 1 second before making the next request
+            continue
+        break
+    full_predictions = response.json()
+    #print(job_id)
+    #print(full_predictions)
+
+    for source in full_predictions:
+        predictions = source["results"]["predictions"]
+        for prediction in predictions:
+            prosody_predictions = prediction["models"]["prosody"]["grouped_predictions"]
+            for prosody_prediction in prosody_predictions:
+                for segment in prosody_prediction["predictions"][:1]:
+                    entries = segment["emotions"]
+                    emotions = {entry['name'] : entry['score'] for entry in entries}
+                    top_emotions = dict(sorted(emotions.items(), key=lambda x: x[1], reverse=True)[:5])
+                    final_emotions = list(top_emotions.keys())
+                    return final_emotions
+
 load_dotenv()
 api_key = os.getenv("OPENAI_KEY", None)
 
@@ -39,6 +96,11 @@ def upload_audio(request):
             for chunk in audio_file.chunks():
                 destination.write(chunk)
 
-        return JsonResponse({'message': 'File uploaded successfully.'})
+        ##written
+
+        res = get_predictions(file_path)
+        print(res)
+
+        return JsonResponse({"response": res})
 
     return JsonResponse({'error': 'Invalid request.'}, status=400)
