@@ -12,7 +12,7 @@ from itertools import islice
 import requests
 import time
 import soundfile
-
+from .ChatGPT.ai import getAIResponse
 base_url = "https://api.assemblyai.com/v2"
 
 headers = {
@@ -87,6 +87,7 @@ def postText(request):
             )
   return Response(res)
 
+
 @api_view(['POST'])
 def upload_audio(request):
     if request.method == 'POST' and request.FILES.get('file'):
@@ -140,8 +141,12 @@ def upload_audio(request):
             else:
                 time.sleep(3)
 
-        print(transcription_result["text"])
+        userInputText = transcription_result["text"]
+
         res.append(transcription_result["text"])
+
+        aiResponse = getAIResponse(userInputText)
+        res.append(aiResponse)
         return JsonResponse({"response": res})
 
     return JsonResponse({'error': 'Invalid request.'}, status=400)
