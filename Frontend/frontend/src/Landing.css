@@ -1,26 +1,56 @@
 .landing-container {
-    background-color: black;
+    /* background-color: rgb(46, 33, 33); */
+    background-image: url('images/background3.jpeg');
+    background-repeat: no-repeat;
+    background-size: cover;
     height: 100vh; /* Set the height of the container to fill the viewport */
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
   }
   
   .logo-text {
+    display: flex;
     color: white;
-    font-size: 48px;
+    font-size: 30px;
+    margin: 16px;
+    font-weight: bold;
+  }
+
+  .starting-text {
+    color: white;
+    font-size: 60px;
     text-align: center;
     margin-bottom: 20px;
   }
   
   .get-started-button {
-    background-color: white;
-    color: black;
     border: none;
-    padding: 12px 24px;
-    font-size: 18px;
+    border-radius: 20px; /* Adjust the border-radius to control the button's roundness */
+    padding: 10px 16px; /* Adjust the padding as needed */
+    background-color: #4caf50; /* Adjust the background color as needed */
+    color: #ffffff; /* Adjust the text color as needed */
+    font-size: 25px; /* Adjust the font size as needed */
+    margin-top: 40px;
     cursor: pointer;
-    border-radius: 4px;
+  }
+
+  .mission-text {
+    color: white;
+    font-size: 20px;
+    text-align: center;
+    margin-top: 15px;
+    margin-left: 150px;
+    margin-right: 150px;
+    line-height: 2;
+  }
+
+  .nav-bar {
+    display: flex;
+    justify-content: space-between;
+    padding: 16px;
+    margin-right: 8px;
+    align-self: flex-start; /* Adjust the padding as needed */
   }
   

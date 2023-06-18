@@ -105,9 +105,9 @@ function Temp() {
   }
   return (
     <div className='App'>
-      <h1>AILoveEnglish!</h1>
-      <h2>Instructions: Record the phrase you want scrutinized by pressing the recording button 
-        on the left. Next, tell us under what context the phrase occurs in.
+
+      <h2 className='instructions'>Press the recording button to talk about what you need help with. Press the green button to
+      send your input to the bot.
       </h2>
       {/* <input
         type="text"
@@ -129,7 +129,7 @@ function Temp() {
           downloadOnSavePress={false}
           downloadFileExtension="wav"
         />
-              <button onClick={handeSubmitAudio}>Speak to the AI</button>
+              <button className='speak-button' onClick={handeSubmitAudio}>Speak to the AI</button>
               <br></br>
               <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
               {

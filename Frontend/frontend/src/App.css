@@ -14,7 +14,6 @@
 }
 
 .App-header {
-  background-color: #282c34;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -57,7 +56,9 @@ body {
 }
 
 body {
-  background-color: black;
+  background-image: url('images/background3.jpeg');
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 /* Style the main heading */
 h1 {
@@ -68,6 +69,23 @@ h1 {
 h2 {
   text-align: center;
   color: rgb(255, 255, 255);
+}
+
+.instructions {
+  text-align: center;
+  color: rgb(255, 255, 255);
+  padding: 50px 50px;
+  line-height: 1.5;
+}
+
+.speak-button {
+  border: none;
+  border-radius: 20px; /* Adjust the border-radius to control the button's roundness */
+  padding: 10px 16px; /* Adjust the padding as needed */
+  background-color: #4caf50; /* Adjust the background color as needed */
+  color: #ffffff; /* Adjust the text color as needed */
+  font-size: 20px; /* Adjust the font size as needed */
+  cursor: pointer;
 }
 
 /* Style the text input box */
@@ -104,11 +122,6 @@ h2 {
 .input input[type="submit"]:focus {
   outline: none;
 }
-
-
-
-
-  
 
 .chat-container {
   display: flex;
