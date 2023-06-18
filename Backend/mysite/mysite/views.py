@@ -11,11 +11,11 @@ from hume.models.config import LanguageConfig
 from itertools import islice
 import requests
 import time
-
+import whisper
 from .Transformer.transformer import audio_to_text
 
 
-
+model = whisper.load_model("medium")
 def get_predictions(fPath):
     
     def get_job_id():
@@ -101,7 +101,9 @@ def upload_audio(request):
         res = get_predictions(file_path)
         print(res)
         #translate audio to text 
-        text = audio_to_text(file_path)
+        # text = audio_to_text(file_path)
+        result = model.transcribe(file_path)
+        text = result["text"]
         res.append(text)
         return JsonResponse({"response": res})
 
