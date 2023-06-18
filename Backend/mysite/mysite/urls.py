@@ -18,5 +18,6 @@ from django.urls import path
 from . import views
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('testing/', views.postText)
+    path('testing/', views.postText),
+    path('audioUpload/', views.upload_audio)
 ]

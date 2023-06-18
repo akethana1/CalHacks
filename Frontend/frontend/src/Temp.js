@@ -42,7 +42,22 @@ function Temp() {
 
 
   const handeSubmitAudio = () => {
-    
+    const formData = new FormData();
+    formData.append('file', theAudio, 'audio.mp3');
+
+    axios.post('http://127.0.0.1:8000/audioUpload/', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+    .then(response => {
+      // Handle the response from the server
+      console.log('Upload successful:', response.data);
+    })
+    .catch(error => {
+      // Handle any error that occurred during the upload
+      console.error('Error uploading file:', error);
+    })
   }
 
   const convertBlobToBase64 = (blob, callback) => {
