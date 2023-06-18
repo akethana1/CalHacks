@@ -4,12 +4,20 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import Temp from './Temp';
+import Landing from './Landing';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
 
     // <App />
-    <Temp />
+    // <Temp />
+    <Router>
+      <Routes>
+        <Route path="/" element={<Landing />} />
+        <Route path="/learn" element={<Temp />} />
+      </Routes>
+    </Router>
 
 );
 
