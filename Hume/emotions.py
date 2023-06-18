@@ -1,28 +1,51 @@
 from hume import HumeBatchClient
 from hume.models.config import LanguageConfig
 from itertools import islice
+import requests
 
-client = HumeBatchClient("ZH01lHke6S8yBjZAAr05j3elbMkM6UwPJlGH2cH0HzBaOeoa")
-urls = ["https://storage.googleapis.com/hume-test-data/audio/ninth-century-laugh.mp3"]
-config = LanguageConfig()
-job = client.submit_job(urls, [config])
+def get_job_id():
+    url = "https://api.hume.ai/v0/batch/jobs"
 
-print(job)
-print("Running...")
+    files = {"file": ("test.mp3", open("assets/test.mp3", "rb"), "audio/mpeg")}
+    payload = {"json": "{}"}
+    headers = {
+        "accept": "application/json",
+        "X-Hume-Api-Key": "yuETNz2lWdHFHtKNzdeVNsAhBOQCCzAHFsjeAKQkYOtlFqcS"
+    }
 
-job.await_complete()
+    response = requests.post(url, data=payload, files=files, headers=headers)
 
-full_predictions = job.get_predictions()
-for source in full_predictions:
-    source_name = source["source"]["url"]
-    predictions = source["results"]["predictions"]
-    for prediction in predictions:
-        language_predictions = prediction["models"]["language"]["grouped_predictions"]
-        for language_prediction in language_predictions:
-            for segment in language_prediction["predictions"][:1]:
-                entries = segment["emotions"]
-                emotions = {entry['name'] : entry['score'] for entry in entries}
-                top_emotions = dict(sorted(emotions.items(), key=lambda x: x[1], reverse=True)[:5])
-                print(top_emotions)
+    return response.json()["job_id"]
 
+job_id = get_job_id()
+
+def get_predictions():
+    url = "https://api.hume.ai/v0/batch/jobs/" + job_id + "/predictions"
+
+    headers = {
+        "accept": "application/json; charset=utf-8",
+        "X-Hume-Api-Key": "yuETNz2lWdHFHtKNzdeVNsAhBOQCCzAHFsjeAKQkYOtlFqcS"
+    }
+
+    response = requests.get(url, headers=headers)
+    full_predictions = response.json()
+    print(job_id)
+    print(full_predictions)
+
+    for source in full_predictions:
+        predictions = source["results"]["predictions"]
+        for prediction in predictions:
+            prosody_predictions = prediction["models"]["prosody"]["grouped_predictions"]
+            for prosody_prediction in prosody_predictions:
+                for segment in prosody_prediction["predictions"][:1]:
+                    entries = segment["emotions"]
+                    emotions = {entry['name'] : entry['score'] for entry in entries}
+                    top_emotions = dict(sorted(emotions.items(), key=lambda x: x[1], reverse=True)[:5])
+                    final_emotions = list(top_emotions.keys())
+                    return final_emotions
+                    
+print(get_predictions())
+
+
+            
                 
