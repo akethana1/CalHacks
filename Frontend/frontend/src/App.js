@@ -4,11 +4,13 @@ import React, { useState } from 'react'
 import axios from 'axios'
 import { AudioRecorder } from 'react-audio-voice-recorder';
 import { useReactMediaRecorder  } from "react-media-recorder";
+import { Audio } from 'react-loader-spinner'
 function App() {
 
   const [text, setText] = useState("")
   const [responseFromAI, setResponseFromAI] = useState("")
-  const [recordedAudio, setRecordedAudio] = useState(null);
+  const [recordedAudio, setRecordedAudio] = useState(null)
+  const [loading, setLoading] = useState(false)
   const {
     status,
     startRecording,
@@ -30,6 +32,7 @@ function App() {
 
   }
   const handleSubmit = () => {
+
     const data = {
       "text": text
     }

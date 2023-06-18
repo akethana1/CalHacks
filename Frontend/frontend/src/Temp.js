@@ -4,12 +4,15 @@ import React, { useState } from 'react'
 import axios from 'axios'
 import { useReactMediaRecorder  } from "react-media-recorder";
 import { AudioRecorder } from 'react-audio-voice-recorder';
+import { Audio } from 'react-loader-spinner'
 
 function Temp() {
 
   const [text, setText] = useState("")
   const [responseFromAI, setResponseFromAI] = useState("")
   const [theAudio, setTheAudio] = useState(null)
+  const [loading, setLoading] = useState(false)
+  const [resEmotions, setResEmotions] = useState([])
   const {
     status,
     startRecording,
@@ -42,6 +45,7 @@ function Temp() {
 
 
   const handeSubmitAudio = () => {
+    setLoading(true)
     const formData = new FormData();
     formData.append('file', theAudio, 'audio.mp3');
 
@@ -53,6 +57,8 @@ function Temp() {
     .then(response => {
       // Handle the response from the server
       console.log('Upload successful:', response.data);
+      setLoading(false)
+      setResEmotions(response.data["response"])
     })
     .catch(error => {
       // Handle any error that occurred during the upload
@@ -103,8 +109,26 @@ function Temp() {
         echoCancellation: true,
       }} 
       downloadOnSavePress={false}
-      downloadFileExtension="mp3"
+      downloadFileExtension="wav"
     />
+
+    {
+      loading ? (
+        <Audio
+          height="80"
+          width="80"
+          radius="9"
+          color="green"
+          ariaLabel="loading"
+          wrapperStyle={null}
+          wrapperClass={null}
+        />
+      ) : (
+        resEmotions.map((element) => {
+          return <div key={element}>{element}</div>;
+        })
+      )
+    }
     </div>
   );
 }
