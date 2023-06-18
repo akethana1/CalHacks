@@ -11,11 +11,19 @@ from hume.models.config import LanguageConfig
 from itertools import islice
 import requests
 import time
-import whisper
-from .Transformer.transformer import audio_to_text
+import speech_recognition as sr
+import soundfile
+
+base_url = "https://api.assemblyai.com/v2"
+
+headers = {
+    "authorization": "34fcffda0aba42ae8b70a6b6909fcafc"
+}
+# import whisper
+# from .Transformer.transformer import audio_to_text
 
 
-model = whisper.load_model("medium")
+# model = whisper.load_model("medium")
 def get_predictions(fPath):
     
     def get_job_id():
@@ -90,8 +98,9 @@ def upload_audio(request):
 
         # Generate a unique filename for the audio file
         filename = 'hello1.mp3'
-
+        filename2 = 'hello2.mp3'
         file_path = os.path.join(audio_folder, filename)
+        file_path2 = os.path.join(audio_folder, filename2)
         with open(file_path, 'wb') as destination:
             for chunk in audio_file.chunks():
                 destination.write(chunk)
@@ -100,11 +109,40 @@ def upload_audio(request):
 
         res = get_predictions(file_path)
         print(res)
-        #translate audio to text 
-        # text = audio_to_text(file_path)
-        result = model.transcribe(file_path)
-        text = result["text"]
-        res.append(text)
+
+
+        ########
+        with open(file_path, "rb") as f:
+            response = requests.post(base_url + "/upload",
+                                    headers=headers,
+                                    data=f)
+
+        upload_url = response.json()["upload_url"]
+
+        data = {
+            "audio_url": upload_url # You can also use a URL to an audio or video file on the web
+        }
+
+        url = base_url + "/transcript"
+        resp = requests.post(url, json=data, headers=headers)
+
+        transcript_id = resp.json()['id']
+        polling_endpoint = f"https://api.assemblyai.com/v2/transcript/{transcript_id}"
+
+        while True:
+            transcription_result = requests.get(polling_endpoint, headers=headers).json()
+
+            if transcription_result['status'] == 'completed':
+                break
+
+            elif transcription_result['status'] == 'error':
+                raise RuntimeError(f"Transcription failed: {transcription_result['error']}")
+
+            else:
+                time.sleep(3)
+
+        print(transcription_result["text"])
+        res.append(transcription_result["text"])
         return JsonResponse({"response": res})
 
     return JsonResponse({'error': 'Invalid request.'}, status=400)
