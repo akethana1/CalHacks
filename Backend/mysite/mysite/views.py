@@ -12,7 +12,7 @@ from itertools import islice
 import requests
 import time
 
-
+from .Transformer.transformer import audio_to_text
 
 
 
@@ -100,7 +100,9 @@ def upload_audio(request):
 
         res = get_predictions(file_path)
         print(res)
-
+        #translate audio to text 
+        text = audio_to_text(file_path)
+        res.append(text)
         return JsonResponse({"response": res})
 
     return JsonResponse({'error': 'Invalid request.'}, status=400)
