@@ -140,7 +140,7 @@ h2 {
   padding: 8px 12px;
   margin-bottom: 8px;
   border-radius: 8px;
-  max-width: 500px;
+  max-width: 270px;
 }
 
 .user-message {
@@ -176,4 +176,34 @@ h2 {
   right: -10px;
   top: 50%;
   transform: translateY(-50%);
+}
+
+.introAI {
+  align-self: flex-start;
+  display: inline-block;
+}
+
+.introHuman {
+  align-self: flex-end;
+  display: inline-block;
+  margin-left: auto; /* Added margin-left: auto */
+
+}
+
+.Original {
+  display: flex;
+  flex-direction: row;
+  margin-left: 50px;
+  margin-right: 50px;
+}
+
+.side-by-side-container {
+  display: grid;
+  grid-template-columns: 8fr 4fr; /* Width ratio of 8 to 4 */
+  gap: 20px; /* Gap between the containers */
+}
+
+.container-8,
+.container-4 {
+  padding: 10px; /* Optional padding for the containers */
 }

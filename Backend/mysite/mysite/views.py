@@ -13,6 +13,7 @@ import requests
 import time
 import soundfile
 from .ChatGPT.ai import getAIResponse
+import json
 base_url = "https://api.assemblyai.com/v2"
 
 headers = {
@@ -93,6 +94,9 @@ def upload_audio(request):
     if request.method == 'POST' and request.FILES.get('file'):
         audio_file = request.FILES['file']
         counter = request.POST.get('counter')
+        history = request.POST.get('history')
+        history = json.loads(history)
+        
         # Assuming you want to save the file in a specific directory
         base_dir = settings.BASE_DIR
         audio_folder = os.path.join(base_dir, 'mysite', "Audio")
@@ -144,7 +148,7 @@ def upload_audio(request):
                 time.sleep(3)
 
         userInputText = transcription_result["text"]
-        aiResponse = getAIResponse({"userInput": userInputText, "counter": counter, "emotions": humeRes})
+        aiResponse = getAIResponse({"userInput": userInputText, "counter": counter, "emotions": humeRes, "history": history})
 
         
         return JsonResponse({"userText": userInputText, "aiResponse": aiResponse})

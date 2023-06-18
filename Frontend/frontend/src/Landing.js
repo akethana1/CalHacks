@@ -4,7 +4,7 @@ import Navbar from './nav_bar'; // Import the CSS file for component-specific st
 
 function Landing() {
   const handleButton = ()=>{
-    window.location.href = "http://localhost:3001/learn"
+    window.location.href = "http://localhost:3000/learn"
   }
   return (
     <div className="landing-container">

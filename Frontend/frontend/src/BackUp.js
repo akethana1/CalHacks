@@ -6,7 +6,7 @@ import { useReactMediaRecorder  } from "react-media-recorder";
 import { AudioRecorder } from 'react-audio-voice-recorder';
 import { Circles } from 'react-loader-spinner'
 
-function Temp() {
+function BackUp() {
 
   const [text, setText] = useState("")
   const [responseFromAI, setResponseFromAI] = useState("")
@@ -15,10 +15,9 @@ function Temp() {
   const [resEmotions, setResEmotions] = useState([])
   const [counter, setCounter] = useState(0)
   const [showSend, setShowSend] = useState(false)
-  const [feedback, setFeedBack] = useState([])
 
   //the Chat Log
-  const [chatLog, setChatLog] = useState([{ role: "assistant", content: "^Tell us about a scenario that you want to practice, For example: I want to simulate ordering in a restraurant" }])
+  const [chatLog, setChatLog] = useState([{ role: "assistant", content: "Tell us about a scenario that you want to practice, For example: I want to simulate ordering in a restraurant" }])
   const {
     status,
     startRecording,
@@ -49,22 +48,6 @@ function Temp() {
       })
   }
 
-  function splitString(string) {
-    if (string[0] == '^'){
-      return [string.slice(1), ""]
-    }
-    const atIndex = string.indexOf('@');
-    const percentIndex = string.indexOf('%');
-    
-    if (atIndex === -1 || percentIndex === -1 || atIndex >= percentIndex) {
-      return ['', ''];
-    }
-    
-    const firstString = string.slice(atIndex + 1, percentIndex);
-    const secondString = string.slice(percentIndex + 1);
-    
-    return [firstString, secondString];
-  }
 
   const handeSubmitAudio = () => {
     setShowSend(false)
@@ -92,17 +75,6 @@ function Temp() {
         { role: "user", content: userText },
         { role: "assistant", content: aiResponse }
       ])
-      if (splitString(aiResponse)[1] == ""){
-        console.log("dfsa")
-      }else{
-        setFeedBack(prevFeedBack => [
-          ...prevFeedBack,
-          {
-            role: "feedback", content: aiResponse
-          }
-        ])
-      }
-      
       setCounter(counter + 1)
       console.log(chatLog)
     })
@@ -192,53 +164,23 @@ function Temp() {
 
       </div>
 
-{/* <div className='Original'>
-<h2 className='introAI'>Conversations: </h2>
-<h2 className='introHuman'>Feedback: </h2>
-</div> */}
+<div className='Original'>
+<h2 className='introAI'>The AI: </h2>
+<h2 className='introHuman'>You:</h2>
 
-<div className='side-by-side-container'>
-  <div className='container-8'>
-  <div className='Original'>
-    <h2 className='introAI'>The AI: </h2>
-    <h2 className='introHuman'>You: </h2>
-  </div>
-    <div className="chat-container">
+</div>
+<div className="chat-container">
   {chatLog.map((message, index) => (
     <div
       key={index}
       className={`message ${message.role === 'user' ? 'user-message' : 'ai-message'}`}
     >
-      {
-      message.role === 'user' ?
-      message.content :
-      splitString(message.content)[0] == "" ?
-      message.content :
-      splitString(message.content)[1]}
-    </div>
-  ))}
-  </div>
-  </div>
-  <div className='container-4'>
-  <div className='Original'>
-    <h2 className='introHuman'>Feedback</h2>
-  </div>
-  <div className="chat-container">
-  {feedback.map((message, index) => (
-    <div
-      key={index}
-      className={`message ${message.role === 'user' ? 'user-message' : 'ai-message'}`}
-    >
-      {splitString(message.content)[0]}
+      {message.content}
     </div>
   ))}
 </div>
-  </div>
-</div>
-
-
     </div>
   );
 }
 
-export default Temp;
+export default BackUp;
