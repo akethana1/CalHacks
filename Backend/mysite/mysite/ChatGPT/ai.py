@@ -39,7 +39,7 @@ def getAIResponse(userInputBag):
         Additionally, if it is appropriate to end the conversation based on the inputted scenario, give final feedback based on the prior criteria,
         grammatical accuracy and emotional expression.
 
-        Otherwise, ontinue the conversion as the role you defined for yourself and 
+        Otherwise, continue the conversion as the role you defined for yourself and 
         give an approporiate response back for the scenario I previously inputted.
         '''
     api_key = os.getenv("OPENAI_KEY", None)

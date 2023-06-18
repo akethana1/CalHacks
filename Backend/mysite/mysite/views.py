@@ -144,11 +144,9 @@ def upload_audio(request):
                 time.sleep(3)
 
         userInputText = transcription_result["text"]
-
-        res.append(transcription_result["text"])
-
         aiResponse = getAIResponse({"userInput": userInputText, "counter": counter, "emotions": humeRes})
-        res.append(aiResponse)
-        return JsonResponse({"response": res})
+
+        
+        return JsonResponse({"userText": userInputText, "aiResponse": aiResponse})
 
     return JsonResponse({'error': 'Invalid request.'}, status=400)
