@@ -92,6 +92,7 @@ def postText(request):
 def upload_audio(request):
     if request.method == 'POST' and request.FILES.get('file'):
         audio_file = request.FILES['file']
+        counter = request.POST.get('counter')
         # Assuming you want to save the file in a specific directory
         base_dir = settings.BASE_DIR
         audio_folder = os.path.join(base_dir, 'mysite', "Audio")
@@ -108,6 +109,7 @@ def upload_audio(request):
         ##written
 
         res = get_predictions(file_path)
+        humeRes = res[:]
         print(res)
 
 
@@ -145,7 +147,7 @@ def upload_audio(request):
 
         res.append(transcription_result["text"])
 
-        aiResponse = getAIResponse(userInputText)
+        aiResponse = getAIResponse({"userInput": userInputText, "counter": counter, "emotions": humeRes})
         res.append(aiResponse)
         return JsonResponse({"response": res})
 
